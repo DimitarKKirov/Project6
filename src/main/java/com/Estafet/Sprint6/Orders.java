@@ -1,7 +1,7 @@
-package com.estafet.learning.Sprint6;
+package com.Estafet.Sprint6;
 
-import com.estafet.learning.CustomExceptions.UnCheckedException;
-import com.estafet.learning.Interfaces.InvoiceCalculations;
+import com.Estafet.CustomExceptions.UnCheckedException;
+import com.Estafet.Interfaces.InvoiceCalculations;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -23,7 +23,6 @@ public class Orders extends Random implements InvoiceCalculations, Serializable 
     private String orderAuthorizedBy;
     private String dateOfAuthorization;
     private long[] itemPrice = {12, 34, 56, 7, 88, 123, 345, 809, 900, 1200};
-    private int userChoice;
     private int vaTInvoice;
     private long amountAfterVat;
     private long amountAfterDiscount;
@@ -41,14 +40,6 @@ public class Orders extends Random implements InvoiceCalculations, Serializable 
 
     public void setBusinessDiscount(long businessDiscount) {
         this.businessDiscount = businessDiscount;
-    }
-
-    public int getUserChoice() {
-        return userChoice;
-    }
-
-    public void setUserChoice(int userChoice) {
-        this.userChoice = userChoice;
     }
 
     public int getVaTInvoice() {
@@ -208,7 +199,7 @@ public class Orders extends Random implements InvoiceCalculations, Serializable 
         this.dateOfAuthorization = dateOfAuthorization;
     }
 
-    public Orders(int orderNumber, String clientDetails, String[] listWithArticles, long totalAmount, String accountName, String dateOfActivation, String billingCity, int zipCode, boolean paymentMethod, String orderAuthorizedBy, String dateOfAuthorization, long[] itemPrice, int userChoice, int vaTInvoice, long amountAfterVat, long amountAfterDiscount, long businessDiscount) {
+    public Orders(int orderNumber, String clientDetails, String[] listWithArticles, long totalAmount, String accountName, String dateOfActivation, String billingCity, int zipCode, boolean paymentMethod, String orderAuthorizedBy, String dateOfAuthorization, long[] itemPrice, int vaTInvoice, long amountAfterVat, long amountAfterDiscount, long businessDiscount) {
         this.orderNumber = orderNumber;
         this.clientDetails = clientDetails;
         this.listWithArticles = listWithArticles;
@@ -221,7 +212,6 @@ public class Orders extends Random implements InvoiceCalculations, Serializable 
         this.orderAuthorizedBy = orderAuthorizedBy;
         this.dateOfAuthorization = dateOfAuthorization;
         this.itemPrice = itemPrice;
-        this.userChoice = userChoice;
         this.vaTInvoice = vaTInvoice;
         this.amountAfterVat = amountAfterVat;
         this.amountAfterDiscount = amountAfterDiscount;

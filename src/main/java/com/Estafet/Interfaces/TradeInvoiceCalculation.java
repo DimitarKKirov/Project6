@@ -1,4 +1,4 @@
-package com.estafet.learning.Interfaces;
+package com.Estafet.Interfaces;
 
 public interface TradeInvoiceCalculation extends InvoiceCalculations {
 

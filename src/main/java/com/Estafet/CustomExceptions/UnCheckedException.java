@@ -1,4 +1,4 @@
-package com.estafet.learning.CustomExceptions;
+package com.Estafet.CustomExceptions;
 
 public class UnCheckedException extends Exception {
 

@@ -1,7 +1,7 @@
-package com.estafet.learning.Sprint6;
+package com.Estafet.Sprint6;
 
-import com.estafet.learning.CustomExceptions.CustomExceptionIO;
-import com.estafet.learning.CustomExceptions.UnCheckedException;
+import com.Estafet.CustomExceptions.CustomExceptionIO;
+import com.Estafet.CustomExceptions.UnCheckedException;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
