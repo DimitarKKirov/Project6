@@ -183,6 +183,10 @@ public class Orders extends Random implements InvoiceCalculations, Serializable 
         this.items = items;
     }
 
+    public static List<Orders> getListWithOrders() {
+        return listWithOrders;
+    }
+
     public Orders() {
 
     }
@@ -293,11 +297,13 @@ public class Orders extends Random implements InvoiceCalculations, Serializable 
 
     @Override
     public String toString() {
-        return "{" + "\n" + orderName + " " +
-                " \n Order Number: " + orderNumber + "\n Client details: " + clientDetails + "\n City " + billingCity + "\n Account: " + accountName +
-                "\n Order date: " + dateOfActivation + "\n List with items " + Arrays.toString(items) + "\n Discount " + businessDiscount +
-                "\n zipCode:" + zipCode + "\n Total price " + totalAmount + "\n Price after discount " + amountAfterDiscount + "\n Price after VAT " +amountAfterVat+
-                '}';
+        StringBuffer a = new StringBuffer("\n "+orderName + "\n Order Number: " + orderNumber + "\n Client details: " + clientDetails
+                + "\n Client account: " + accountName + "\n City to deliver: " + billingCity + "\n City Zip Code: " + zipCode +
+                "\n Ordered item: " + Arrays.toString(items) + "\n Date of order: " + dateOfActivation + "\n Account discount: "
+                + businessDiscount + "\n Price: " + totalAmount + "\n Price after discount: " + amountAfterDiscount +
+                "\n Price after VAT: " + amountAfterVat);
+
+        return a.toString();
     }
 
     public static void addOrderToList(Orders a) {
@@ -333,12 +339,19 @@ public class Orders extends Random implements InvoiceCalculations, Serializable 
         }
     }
 
-    public static void orderListShow() throws UnCheckedException {
+    public static String orderListShow() throws UnCheckedException {
+        StringBuffer print= new StringBuffer( );
         if (listWithOrders == null) {
             throw new UnCheckedException("*The list is empty*");
         } else {
-            System.out.println(listWithOrders);
+
+            for (int i=0;i<listWithOrders.size();i++){
+                print.append(i);
+
+            }return print.toString();
+
         }
+
     }
 
     static int generateZip() {
@@ -461,9 +474,18 @@ public class Orders extends Random implements InvoiceCalculations, Serializable 
             }
         }
     }
+    public void printing(){
+        StringBuffer a = new StringBuffer(orderName + "\n Order Number: " + orderNumber + "\n Client details: " + clientDetails
+                + "\n Client account: " + accountName + "\n City to deliver: " + billingCity + "\n City Zip Code: " + zipCode +
+                "\n Ordered item: " + Arrays.toString(items) + "\n Date of order: " + dateOfActivation + "\n Account discount: "
+                + businessDiscount + "\n Price: " + totalAmount + "\n Price after discount: " + amountAfterDiscount +
+                "\n Price after VAT: " + amountAfterVat);
+        System.out.println(a);
+    }
 
     public static void deleteList() {
         listWithOrders.clear();
+        listWithOrders=null;
         System.out.println(" *The list is clear*");
     }
 }

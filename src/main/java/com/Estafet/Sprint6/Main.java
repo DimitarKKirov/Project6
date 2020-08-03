@@ -111,15 +111,19 @@ public class Main implements Serializable {
         lACZipCodesCity.remove(90210);
         System.out.println("\n" + countryNamesAndMobileCodes.toString() + "\n\n" + lACZipCodesCity.toString());
         //testing setttings
-            Orders newOrder= new Orders();
-            System.out.println(newOrder.toString());
+        Orders newOrder = new Orders();
+        System.out.println(newOrder.toString());
 
-       Orders theMoon=new Orders(4,1000,"Delyan Delev","Delyan@","31/07/2020","Sofia","Estafet","3/08/2020",15);
+        Orders theMoon = new Orders(4, 1000, "Delyan Delev", "Delyan@", "31/07/2020", "Sofia", "Estafet", "3/08/2020", 15);
+        theMoon.articlesList();
         theMoon.priceList();
         theMoon.priceCalc();
         theMoon.discountCalc();
         theMoon.vatArticles();
         System.out.println(theMoon.toString());
+        Orders.orderList();
+        Orders.orderListShow();
+
 
     }
 }
