@@ -296,7 +296,7 @@ public class Orders extends Random implements InvoiceCalculations, Serializable 
         return "{" + "\n" + orderName + " " +
                 " \n Order Number: " + orderNumber + "\n Client details: " + clientDetails + "\n City " + billingCity + "\n Account: " + accountName +
                 "\n Order date: " + dateOfActivation + "\n List with items " + Arrays.toString(items) + "\n Discount " + businessDiscount +
-                "\n zipCode:" + zipCode + "\n Total price " + totalAmount + "\n Price after discount " + amountAfterDiscount +
+                "\n zipCode:" + zipCode + "\n Total price " + totalAmount + "\n Price after discount " + amountAfterDiscount + "\n Price after VAT " +amountAfterVat+
                 '}';
     }
 

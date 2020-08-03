@@ -113,6 +113,14 @@ public class Main implements Serializable {
         //testing setttings
             Orders newOrder= new Orders();
             System.out.println(newOrder.toString());
+
+       Orders theMoon=new Orders(4,1000,"Delyan Delev","Delyan@","31/07/2020","Sofia","Estafet","3/08/2020",15);
+        theMoon.priceList();
+        theMoon.priceCalc();
+        theMoon.discountCalc();
+        theMoon.vatArticles();
+        System.out.println(theMoon.toString());
+
     }
 }
 
