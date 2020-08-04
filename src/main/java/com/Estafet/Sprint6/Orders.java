@@ -495,6 +495,13 @@ public class Orders extends Random implements InvoiceCalculations, Serializable 
             }
         }
     }
+    void connector(){
+        try {
+            Class.forName("xerial:sqlite-jdbc");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static void deleteList() {
         listWithOrders.clear();
