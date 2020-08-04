@@ -297,13 +297,31 @@ public class Orders extends Random implements InvoiceCalculations, Serializable 
 
     @Override
     public String toString() {
-        StringBuffer a = new StringBuffer("\n "+orderName + "\n Order Number: " + orderNumber + "\n Client details: " + clientDetails
+        StringBuffer a = new StringBuffer( "\n\n "+orderName + "\n Order Number: " + orderNumber + "\n Client details: " + clientDetails
                 + "\n Client account: " + accountName + "\n City to deliver: " + billingCity + "\n City Zip Code: " + zipCode +
                 "\n Ordered item: " + Arrays.toString(items) + "\n Date of order: " + dateOfActivation + "\n Account discount: "
-                + businessDiscount + "\n Price: " + totalAmount + "\n Price after discount: " + amountAfterDiscount +
+                + businessDiscount +"%"+ "\n Price: " + totalAmount + "\n Price after discount: " + amountAfterDiscount +
                 "\n Price after VAT: " + amountAfterVat);
 
         return a.toString();
+    }
+
+    public String printOrder(){
+        String a= String.format("\n%s",orderName);
+        String b=String.format("\n Order Number: %d" , orderNumber );
+        String c=String.format("\n Client details: %s" , clientDetails);
+        String d=String.format("\n Client account: %s" , accountName);
+        String e=String.format("\n City to deliver: %s" , billingCity);
+        String f=String.format("\n City Zip Code: %d" , zipCode );
+        String g=String.format("\n Ordered item: %s" , Arrays.toString(items));
+        String n=String.format("\n Date of order: %s" , dateOfActivation);
+        String t=String.format("\n Account discount: %d" , businessDiscount).concat("%");
+        String y=String.format("\n Price: %d" , totalAmount );
+        String h=String.format("\n Price after discount: %d" , amountAfterDiscount);
+        String u=String.format("\n Price after VAT: %d" , amountAfterVat);
+        System.out.println(a.concat(b+c+d+e+f+g+n+t+y+h+u));
+        return a;
+
     }
 
     public static void addOrderToList(Orders a) {
@@ -339,16 +357,19 @@ public class Orders extends Random implements InvoiceCalculations, Serializable 
         }
     }
 
-    public static String orderListShow() throws UnCheckedException {
-        StringBuffer print= new StringBuffer( );
+    public static String printAllOrders() throws UnCheckedException {
+        StringBuilder print= new StringBuilder();
+        int a=0;
         if (listWithOrders == null) {
             throw new UnCheckedException("*The list is empty*");
         } else {
 
             for (int i=0;i<listWithOrders.size();i++){
-                print.append(i);
+                print.insert(a,listWithOrders.get(i));
+                a++;
 
-            }return print.toString();
+            }System.out.println(print);
+            return print.toString();
 
         }
 

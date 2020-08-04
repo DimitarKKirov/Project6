@@ -34,7 +34,7 @@ public class Main implements Serializable {
             System.out.println(order.toString());
             System.out.println(order.getAmountAfterVat());
             try {
-                Orders.orderListShow();//Prints all orders from the list with orders
+                Orders.printAllOrders();//Prints all orders from the list with orders
             } catch (UnCheckedException e234) {
                 System.out.println(e234);
             }
@@ -72,17 +72,20 @@ public class Main implements Serializable {
             Orders.listToFile();
 
             Invoice.invoiceList();
-            Invoice.invoiceListShow();
+            Invoice.printAllInvoices();
 
             Invoice one = new Invoice("Dimitar Kirov", 11, "BG230967425", "7/7/2020", 2, "Dimitar Kirov");
+            one.setBillingCity("Anemos");
+            one.setZipCode(1287);
             one.articlesList();
             one.priceList();
             one.priceCalc();
             one.discountCalc();
             one.vatArticles();
+            one.printInvoice();
+//            Invoice.addInvoiceToList(one);
+//            Invoice.printAllInvoices();
 
-            Invoice.addInvoiceToList(one);
-            Invoice.invoiceListShow();
 
         }
         HashMap<String, Integer> countryNamesAndMobileCodes = new HashMap<>();
@@ -122,7 +125,9 @@ public class Main implements Serializable {
         theMoon.vatArticles();
         System.out.println(theMoon.toString());
         Orders.orderList();
-        Orders.orderListShow();
+        Orders.printAllOrders();
+        Invoice.printAllInvoices();
+        theMoon.printOrder();
 
 
     }

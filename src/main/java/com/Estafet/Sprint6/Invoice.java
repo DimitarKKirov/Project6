@@ -34,13 +34,13 @@ public class Invoice extends Orders {
 
     }
 
-    public Invoice(String clientDetailsInvoice, int invoiceNumber, String bankAccountIndexInvoice, String dateOfReleaseInvoice, long businessDiscountInvoice,String invoiceVatCalculatedBy) {
+    public Invoice(String clientDetailsInvoice, int invoiceNumber, String bankAccountIndexInvoice, String dateOfReleaseInvoice, long businessDiscountInvoice, String invoiceVatCalculatedBy) {
         this.clientDetailsInvoice = clientDetailsInvoice;
         this.invoiceNumber = invoiceNumber;
         this.bankAccountIndexInvoice = bankAccountIndexInvoice;
         this.dateOfReleaseInvoice = dateOfReleaseInvoice;
         this.businessDiscountInvoice = businessDiscountInvoice;
-        this.invoiceVatCalculatedBy=invoiceVatCalculatedBy;
+        this.invoiceVatCalculatedBy = invoiceVatCalculatedBy;
     }
 
     public Invoice(String clientDetailsInvoice, String[] listWithArticlesInvoice, long totalAmountInvoice, int invoiceNumber, String bankAccountIndexInvoice, String dateOfReleaseInvoice, long businessDiscountInvoice, int vaTInvoice) {
@@ -88,6 +88,26 @@ public class Invoice extends Orders {
 
     public void setListWithArticlesInvoice(String[] listWithArticlesInvoice) {
         this.listWithArticlesInvoice = listWithArticlesInvoice;
+    }
+
+    @Override
+    public int getZipCode() {
+        return zipCode;
+    }
+
+    @Override
+    public void setZipCode(int zipCode) {
+        this.zipCode = zipCode;
+    }
+
+    @Override
+    public String getBillingCity() {
+        return billingCity;
+    }
+
+    @Override
+    public void setBillingCity(String billingCity) {
+        this.billingCity = billingCity;
     }
 
     public long[] getItemPriceInvoice() {
@@ -156,12 +176,30 @@ public class Invoice extends Orders {
 
     @Override
     public String toString() {
-        return "{" + "\n" + invoiceName + " " +
-                "\nInvoice Number: " + invoiceNumber + "\nDate of Release: " + dateOfReleaseInvoice + "\nClient details: " + clientDetailsInvoice +
-                "\nList With Articles: " + Arrays.toString(listWithArticlesInvoice) +
-                "\nDiscount:" + businessDiscountInvoice + "%" + "\nTotal amount: " + totalAmount + "\nVAT responsibility: " + invoiceVatCalculatedBy +
-                "\nAmount after Discount and VAT " + amountAfterVat +
-                '}';
+        StringBuffer a = new StringBuffer("\n\n" + invoiceName + " " +
+                "\n Invoice Number: " + invoiceNumber + "\n Client details: " + clientDetailsInvoice + "\n City to deliver: " + billingCity +
+                "\n City Zip Code: " + zipCode +
+                "\n List With Articles: " + Arrays.toString(listWithArticlesInvoice) + "\n Date of Release: " + dateOfReleaseInvoice +
+                "\n Discount:" + businessDiscountInvoice + "%" + "\n Total amount: " + totalAmount + "\n VAT responsibility: " + invoiceVatCalculatedBy +
+                "\n Amount after Discount and VAT: " + amountAfterVat);
+        return a.toString();
+    }
+
+    public String printInvoice() {
+        String a = String.format("\n%s", invoiceName);
+        String b = String.format("\n Order Number: %d", invoiceNumber);
+        String c = String.format("\n Client details: %s", clientDetailsInvoice);
+        String e = String.format("\n City to deliver: %s", billingCity);
+        String f = String.format("\n City Zip Code: %d", zipCode);
+        String g = String.format("\n Ordered item: %s", Arrays.toString(listWithArticlesInvoice));
+        String n = String.format("\n Date of order: %s", dateOfReleaseInvoice);
+        String t = String.format("\n Account discount: %d", businessDiscountInvoice).concat("%");
+        String y = String.format("\n Price: %d", totalAmount);
+        String h = String.format("\n Price after discount: %d", amountAfterDiscount);
+        String u = String.format("\n Price after VAT: %d", amountAfterVat);
+        System.out.println(a.concat(b + c + e + f + g + n + t + y + h + u));
+        return a;
+
     }
 
     public static void invoiceList() throws IOException {
@@ -194,11 +232,23 @@ public class Invoice extends Orders {
         listWhitInvoices.add(a);
     }
 
-    public static void invoiceListShow() throws UnCheckedException {
+    public static String printAllInvoices() throws UnCheckedException {
+        StringBuilder print = new StringBuilder();
+        int a = 0;
         if (listWhitInvoices == null) {
-            throw new UnCheckedException("List is empty");
+            throw new UnCheckedException("*The list is empty*");
+        } else {
+
+            for (int i = 0; i < listWhitInvoices.size(); i++) {
+                print.insert(a, listWhitInvoices.get(i));
+                a++;
+
+            }
+            System.out.println(print);
+            return print.toString();
+
         }
-        System.out.println(listWhitInvoices);
+
     }
 
     @Override
