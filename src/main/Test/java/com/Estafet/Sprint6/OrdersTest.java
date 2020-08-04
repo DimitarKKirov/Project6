@@ -159,6 +159,13 @@ public class OrdersTest {
     @Test
     public void deleteList() {
     }
+    @Test
+    public void printOrder() {
+    }
+
+    @Test
+    public void printAllOrders() {
+    }
 
     @After
     public void tearDown() throws Exception {
@@ -169,4 +176,5 @@ public class OrdersTest {
     public static void afterClass() throws Exception {
 
     }
+
 }

@@ -137,4 +137,12 @@ public class InvoiceTest {
     @Test
     public void invoiceListContainOrderNumber() {
     }
+
+    @Test
+    public void printInvoice() {
+    }
+
+    @Test
+    public void printAllInvoices() {
+    }
 }

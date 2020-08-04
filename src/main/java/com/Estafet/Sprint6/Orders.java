@@ -495,14 +495,6 @@ public class Orders extends Random implements InvoiceCalculations, Serializable 
             }
         }
     }
-    public void printing(){
-        StringBuffer a = new StringBuffer(orderName + "\n Order Number: " + orderNumber + "\n Client details: " + clientDetails
-                + "\n Client account: " + accountName + "\n City to deliver: " + billingCity + "\n City Zip Code: " + zipCode +
-                "\n Ordered item: " + Arrays.toString(items) + "\n Date of order: " + dateOfActivation + "\n Account discount: "
-                + businessDiscount + "\n Price: " + totalAmount + "\n Price after discount: " + amountAfterDiscount +
-                "\n Price after VAT: " + amountAfterVat);
-        System.out.println(a);
-    }
 
     public static void deleteList() {
         listWithOrders.clear();
