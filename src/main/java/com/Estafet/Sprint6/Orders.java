@@ -4,6 +4,9 @@ import com.Estafet.CustomExceptions.UnCheckedException;
 import com.Estafet.Interfaces.InvoiceCalculations;
 
 import java.io.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -495,10 +498,13 @@ public class Orders extends Random implements InvoiceCalculations, Serializable 
             }
         }
     }
-    void connector(){
+  static  void connector(){
         try {
-            Class.forName("xerial:sqlite-jdbc");
-        } catch (ClassNotFoundException e) {
+
+            Connection con= DriverManager.getConnection("jdbc:mysql://localhost:3306/project6?serverTimezone=Europe/Sofia","root","root");
+            System.out.println("Connection successful");
+
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -508,6 +514,8 @@ public class Orders extends Random implements InvoiceCalculations, Serializable 
         listWithOrders=null;
         System.out.println(" *The list is clear*");
     }
+
+
 }
 
 

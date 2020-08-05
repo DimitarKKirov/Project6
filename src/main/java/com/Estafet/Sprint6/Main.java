@@ -83,8 +83,8 @@ public class Main implements Serializable {
             one.discountCalc();
             one.vatArticles();
             one.printInvoice();
-//            Invoice.addInvoiceToList(one);
-//            Invoice.printAllInvoices();
+            Invoice.addInvoiceToList(one);
+            Invoice.printAllInvoices();
 
 
         }
@@ -129,7 +129,7 @@ public class Main implements Serializable {
         Invoice.printAllInvoices();
         theMoon.printOrder();
 
-
+Orders.connector();
     }
 }
 
