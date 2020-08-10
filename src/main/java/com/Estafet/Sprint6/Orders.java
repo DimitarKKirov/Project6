@@ -348,9 +348,6 @@ public class Orders extends Random implements InvoiceCalculations, Serializable 
             order.orderAuthorizedBy = namesUsers[i];
             order.businessDiscount = bisDis();
             order.invoiceIncluded();
-            if (invoiceOnOff){
-
-            }
             order.articlesList();
             order.priceList();
             order.priceCalc();
@@ -391,8 +388,10 @@ public class Orders extends Random implements InvoiceCalculations, Serializable 
         Random acc = new Random();
         String a;
         String[] accounts = {"Account 1", "Account 2", "Account 3", "Account 4", "Account 5", "Account 6", "Account 7", "Account 8", "Account 9", "Account 4A"};
+        String[]numbers={"1","2","3","4","5","6","7","8","9","0","11","12","13","14","15"};
+        String b=numbers[acc.nextInt(15)];
         a = accounts[acc.nextInt(10)];
-        return a;
+        return a.concat(b);
     }
 
     static String randomCity() {
@@ -498,7 +497,7 @@ public class Orders extends Random implements InvoiceCalculations, Serializable 
             }
         }
     }
-  static  void connector(){
+  void connector(){
         try {
 
             Connection con= DriverManager.getConnection("jdbc:mysql://localhost:3306/project6?serverTimezone=Europe/Sofia","root","root");

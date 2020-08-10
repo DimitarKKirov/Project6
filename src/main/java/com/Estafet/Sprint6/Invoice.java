@@ -3,6 +3,7 @@ package com.Estafet.Sprint6;
 import com.Estafet.CustomExceptions.UnCheckedException;
 
 import java.io.IOException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -209,7 +210,6 @@ public class Invoice extends Orders {
         String dataOAUT = "Next Day";
         for (int i = 0; i < namesUsers.length; i++) {
             Invoice invoice = new Invoice();
-            invoice.invoiceNumber = a++;
             invoice.clientDetailsInvoice = namesUsers[i];
             invoice.zipCode = generateZip();
             invoice.accountName = accountName();
@@ -223,6 +223,8 @@ public class Invoice extends Orders {
             invoice.priceCalc();
             invoice.discountCalc();
             invoice.vatArticles();
+            invoice.connector();
+
 
             listWhitInvoices.add(invoice);
         }
@@ -321,6 +323,42 @@ public class Invoice extends Orders {
             long b = listWhitInvoices.size();
             throw new UnCheckedException("The input is grater than List size," +
                     "the list size is: " + b);
+        }
+    }
+
+    void connector() {
+        try {
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/project6?serverTimezone=Europe/Sofia", "root", "root");
+            System.out.println("Connection successful");
+            String prep = "INSERT INTO invoices (accountName, clientDetailsInvoice, billingCity, zipCode, listWithArticlesInvoice, priceOfItem, businessDiscountInvoice) values (?, ?, ?, ?, ?, ?, ?)";
+            String creat= "create table if not exists Invoices\n" +
+                    "(\n" +
+                    "\tinvoiceNumber INT unsigned not null auto_increment,\n" +
+                    "\taccountName varchar(50) not null default '',\n" +
+                    "\tclientDetailsInvoice varchar(100) not null default '',\n" +
+                    "\tbillingCity varchar(50) not null default '',\n" +
+                    "\tzipCode int unsigned not null default 0,\n" +
+                    "\tlistWithArticlesInvoice varchar(500) not null default '',\n" +
+                    "\tpriceOfItem varchar(50)  not null default '',\n" +
+                    "\tbusinessDiscountInvoice int unsigned not null default 0,\n" +
+                    "\tdateOfAuthorization datetime not null default (now() + interval 1 day),\n" +
+                    "\tprimary key (invoiceNumber)\n" +
+                    ");";
+            Statement createDB=con.createStatement();
+            createDB.execute(creat);
+            PreparedStatement one = con.prepareStatement(prep);
+            one.setString(1, accountName);
+            one.setString(2, clientDetailsInvoice);
+            one.setString(3, billingCity);
+            one.setInt(4,zipCode);
+            one.setString(5, Arrays.toString(getItems()));
+            one.setString(6,Arrays.toString(getOrderPrice()));
+            one.setInt(7, (int) getBusinessDiscountInvoice());//change to decimal
+            one.execute();
+            con.close();
+            System.out.println("database");
+        } catch (SQLException  e) {
+            e.printStackTrace();
         }
     }
 
