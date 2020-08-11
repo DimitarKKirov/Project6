@@ -34,7 +34,7 @@ public class Orders extends Random implements InvoiceCalculations, Serializable 
     private String[] items;
     static final String[] namesUsers = {"Dkk", "Delqn Delev", "Anton Rusanov", "Georgi Vlaykov", "Dimitar Kirilov Kirov", "Alistair Park", "Paulo Goncalves", "Dimo Kamenov", "Ludmila Nenkova", "Evgeni Popov"};
     private static List<Orders> listWithOrders;
-    private static boolean invoiceOnOff;
+
 
 
     public long getBusinessDiscount() {
@@ -347,7 +347,6 @@ public class Orders extends Random implements InvoiceCalculations, Serializable 
             order.billingCity = randomCity();
             order.orderAuthorizedBy = namesUsers[i];
             order.businessDiscount = bisDis();
-            order.invoiceIncluded();
             order.articlesList();
             order.priceList();
             order.priceCalc();
@@ -436,12 +435,6 @@ public class Orders extends Random implements InvoiceCalculations, Serializable 
         }
     }
 
-    private void invoiceIncluded() {
-        invoiceOnOff = false;
-        Random randomNumber = new Random(100);
-        int number = randomNumber.nextInt(50);
-        invoiceOnOff = number / 2 == 0;
-    }
 
     private static void orderNCheck(int orderN) throws UnCheckedException {
         if (listWithOrders == null) {

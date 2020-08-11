@@ -1,18 +1,25 @@
 package com.Estafet.Sprint6;
 
 import com.Estafet.CustomExceptions.UnCheckedException;
+import com.Estafet.Interfaces.InvoiceCalculations;
+import com.mysql.cj.protocol.Resultset;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
-public class Invoice extends Orders {
-
+public class Invoice extends Random implements InvoiceCalculations, Serializable {
+    private String articles;
+    private String price;
+    private Connection con;
     private static final String invoiceName = "*Shop Invoice*";// the variable is not inherited in extended classes and cannot be changed it can be only read
     private String clientDetailsInvoice;
     private String[] listWithArticlesInvoice = {"Laptop", "TV", "PC", "Monitor", "Security Cameras", "Toy Laptop", "Wall painting", "Desk", "Gaming chair", "Headset"};
+    static final String[] namesUsers = {"Dkk", "Delqn Delev", "Anton Rusanov", "Georgi Vlaykov", "Dimitar Kirilov Kirov", "Alistair Park", "Paulo Goncalves", "Dimo Kamenov", "Ludmila Nenkova", "Evgeni Popov"};
     private long[] itemPriceInvoice;
     private int invoiceNumber;
     private String bankAccountIndexInvoice;
@@ -30,14 +37,18 @@ public class Invoice extends Orders {
     private String dateOfAuthorization;
     private String billingCity;
     private String invoiceVatCalculatedBy;
+    private long[] itemPrice = {12, 34, 56, 7, 88, 123, 345, 809, 900, 1200};
+    private long[] invoicePrice;
+    private String[] items;
+    private static List<String> dbList;
+
 
     public Invoice() {
 
     }
 
-    public Invoice(String clientDetailsInvoice, int invoiceNumber, String bankAccountIndexInvoice, String dateOfReleaseInvoice, long businessDiscountInvoice, String invoiceVatCalculatedBy) {
+    public Invoice(String clientDetailsInvoice, String bankAccountIndexInvoice, String dateOfReleaseInvoice, long businessDiscountInvoice, String invoiceVatCalculatedBy) {
         this.clientDetailsInvoice = clientDetailsInvoice;
-        this.invoiceNumber = invoiceNumber;
         this.bankAccountIndexInvoice = bankAccountIndexInvoice;
         this.dateOfReleaseInvoice = dateOfReleaseInvoice;
         this.businessDiscountInvoice = businessDiscountInvoice;
@@ -53,6 +64,23 @@ public class Invoice extends Orders {
         this.dateOfReleaseInvoice = dateOfReleaseInvoice;
         this.businessDiscountInvoice = businessDiscountInvoice;
         this.vaTInvoice = vaTInvoice;
+    }
+
+
+    public long[] getInvoicePrice() {
+        return invoicePrice;
+    }
+
+    public void setInvoicePrice(long[] invoicePrice) {
+        this.invoicePrice = invoicePrice;
+    }
+
+    public String[] getItems() {
+        return items;
+    }
+
+    public void setItems(String[] items) {
+        this.items = items;
     }
 
     public long getAmountAfterDiscount() {
@@ -89,26 +117,6 @@ public class Invoice extends Orders {
 
     public void setListWithArticlesInvoice(String[] listWithArticlesInvoice) {
         this.listWithArticlesInvoice = listWithArticlesInvoice;
-    }
-
-    @Override
-    public int getZipCode() {
-        return zipCode;
-    }
-
-    @Override
-    public void setZipCode(int zipCode) {
-        this.zipCode = zipCode;
-    }
-
-    @Override
-    public String getBillingCity() {
-        return billingCity;
-    }
-
-    @Override
-    public void setBillingCity(String billingCity) {
-        this.billingCity = billingCity;
     }
 
     public long[] getItemPriceInvoice() {
@@ -180,7 +188,7 @@ public class Invoice extends Orders {
         StringBuffer a = new StringBuffer("\n\n" + invoiceName + " " +
                 "\n Invoice Number: " + invoiceNumber + "\n Client details: " + clientDetailsInvoice + "\n City to deliver: " + billingCity +
                 "\n City Zip Code: " + zipCode +
-                "\n List With Articles: " + Arrays.toString(listWithArticlesInvoice) + "\n Date of Release: " + dateOfReleaseInvoice +
+                "\n List With Articles: " + articles + "\n Date of Release: " + dateOfReleaseInvoice +
                 "\n Discount:" + businessDiscountInvoice + "%" + "\n Total amount: " + totalAmount + "\n VAT responsibility: " + invoiceVatCalculatedBy +
                 "\n Amount after Discount and VAT: " + amountAfterVat);
         return a.toString();
@@ -204,8 +212,6 @@ public class Invoice extends Orders {
     }
 
     public static void invoiceList() throws IOException {
-        int a = 1;
-        listWhitInvoices = new ArrayList<>(1000);
         String dateOA = "Current Date";
         String dataOAUT = "Next Day";
         for (int i = 0; i < namesUsers.length; i++) {
@@ -224,14 +230,79 @@ public class Invoice extends Orders {
             invoice.discountCalc();
             invoice.vatArticles();
             invoice.connector();
-
-
-            listWhitInvoices.add(invoice);
         }
     }
 
-    public static void addInvoiceToList(Invoice a) {
+    public static void addInvoiceToList(Invoice a) throws SQLException {
         listWhitInvoices.add(a);
+        String prep = "INSERT INTO invoices (accountName, clientDetailsInvoice, billingCity, zipCode, listWithArticlesInvoice, priceOfItem, businessDiscountInvoice,priceAfterDiscount," +
+                "priceAfterVat,totalPrice ) values (?, ?, ?, ?, ?, ?, ?,?,?,?)";
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/project6?serverTimezone=Europe/Sofia", "root", "root");
+        PreparedStatement state = con.prepareStatement(prep);
+        state.setString(1, a.accountName);
+        state.setString(2, a.clientDetailsInvoice);
+        state.setString(3, a.billingCity);
+        state.setInt(4, a.zipCode);
+        state.setString(5, Arrays.toString(a.getItems()));
+        state.setString(6, Arrays.toString(a.getInvoicePrice()));
+        state.setInt(7, (int) a.getBusinessDiscountInvoice());//change to decimal
+        state.setInt(8, (int) a.amountAfterDiscount);
+        state.setInt(9, (int) a.amountAfterVat);
+        state.setInt(10, (int) a.totalAmount);
+        state.execute();
+        con.close();
+    }
+
+    public void readDB() {
+        System.out.println(listWhitInvoices.toString());
+    }
+
+    public void invoiceDbToList() throws SQLException {
+        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/project6?serverTimezone=Europe/Sofia", "root", "root");
+        //SELECT * FROM Table ORDER BY ID DESC LIMIT 1
+        String q = "select invoiceNumber ,accountName, clientDetailsInvoice, billingCity," +
+                "zipCode, listWithArticlesInvoice, priceOfItem, businessDiscountInvoice," +
+                "dateOfAuthorization, totalPrice, priceAfterDiscount," +
+                "priceAfterVat from invoices";
+        Statement nStat = con.createStatement();
+        ResultSet list = nStat.executeQuery(q);
+        while (list.next()) {
+            int number = list.getInt("invoiceNumber");
+            String accName = list.getString("accountName");
+            String accDetails = list.getString("clientDetailsInvoice");
+            String city = list.getString("billingCity");
+            int zip = list.getInt("zipCode");
+            String articles = list.getString("listWithArticlesInvoice");
+            String price = list.getString("priceOfItem");///Exception in thread "main" java.sql.SQLFeatureNotSupportedException
+            int discount = list.getInt("businessDiscountInvoice");
+            Date dateAuthorization = list.getDate("dateOfAuthorization");
+            String time = dateAuthorization.toString();
+            int totalPrice = list.getInt("totalPrice");
+            int priceWithDiscount = list.getInt("priceAfterDiscount");
+            int vatPrice = list.getInt("priceAfterVat");
+            listWhitInvoices = new ArrayList<>(1000);
+            for (int i = 0; i < namesUsers.length; i++) {
+                Invoice invoice = new Invoice();
+                invoice.invoiceNumber = number;
+                invoice.clientDetailsInvoice = accDetails;
+                invoice.zipCode = zip;
+                invoice.accountName = accName;
+                invoice.dateOfReleaseInvoice = time;
+                invoice.dateOfAuthorization = time;
+                invoice.billingCity = city;
+                invoice.articles = articles;
+                invoice.price = price;
+                invoice.businessDiscountInvoice = discount;
+                invoice.totalAmount = totalPrice;
+                invoice.amountAfterDiscount = priceWithDiscount;
+                invoice.amountAfterVat = vatPrice;
+                listWhitInvoices.add(invoice);
+
+            }
+
+        }
+        con.close();
+
     }
 
     public static String printAllInvoices() throws UnCheckedException {
@@ -251,6 +322,24 @@ public class Invoice extends Orders {
 
         }
 
+    }
+
+    @Override
+    public void methodOfPayment() {
+        if (paymentMethod) {
+            System.out.println("Chosen payment method is: Online Payment");
+        } else {
+            System.out.println("Payment method is Cash on delivery receive");
+        }
+    }
+
+    @Override
+    public void priceCalc() {
+        long a = 0;
+        for (int l = 0; l < invoicePrice.length; l++) {
+            a += invoicePrice[l];
+        }
+        setTotalAmount(a);
     }
 
     @Override
@@ -275,6 +364,50 @@ public class Invoice extends Orders {
         setAmountAfterVat(e);
     }
 
+    @Override
+    public void articlesList() {
+        String[] itemsP = new String[5];
+        for (int i = 0; i <= listWithArticlesInvoice.length - 6; i++) {
+            itemsP[i] = listWithArticlesInvoice[i];
+            setItems(itemsP);
+        }
+
+    }
+
+    @Override
+    public void priceList() throws IOException {
+        long[] price = new long[5];
+        for (int i = 0; i <= itemPrice.length - 6; i++) {
+            price[i] = itemPrice[i];
+            setInvoicePrice(price);
+        }
+    }
+
+    static String accountName() {
+        Random acc = new Random();
+        String a;
+        String[] accounts = {"Account 1", "Account 2", "Account 3", "Account 4", "Account 5", "Account 6", "Account 7", "Account 8", "Account 9", "Account 4A"};
+        String[] numbers = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "11", "12", "13", "14", "15"};
+        String b = numbers[acc.nextInt(15)];
+        a = accounts[acc.nextInt(10)];
+        return a.concat(b);
+    }
+
+    static String randomCity() {
+        String a;
+        Random city = new Random();
+        String[] cityWorld = {"Tokyo", "Delhi", "Beijing", "Osaka", "Moscow", "Seoul", "London", "Xi'an", "Hong Kong", "Suzhou", "Sofia", "Yambol", "Oslo", "Trondheim"};
+        a = cityWorld[city.nextInt(14)];
+        return a;
+    }
+
+    static int bisDis() {
+        int a;
+        Random dis = new Random();
+        a = 1 + dis.nextInt(20);
+        return a;
+    }
+
     public static void listChecker(int invoiceN) throws UnCheckedException {
         invoiceNCheck(invoiceN);
         for (Invoice i : listWhitInvoices) {
@@ -283,6 +416,15 @@ public class Invoice extends Orders {
             }
         }
 
+    }
+
+    static int generateZip() {
+        Random random = new Random();
+        int a = 0;
+        for (int i = 1; i <= 1; i++) {
+            a = i + random.nextInt(2000);
+        }
+        return a;
     }
 
     public static void invoiceListContainOrderNumber(int invoiceNum) throws UnCheckedException {
@@ -328,10 +470,11 @@ public class Invoice extends Orders {
 
     void connector() {
         try {
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/project6?serverTimezone=Europe/Sofia", "root", "root");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/project6?serverTimezone=Europe/Sofia", "root", "root");
             System.out.println("Connection successful");
-            String prep = "INSERT INTO invoices (accountName, clientDetailsInvoice, billingCity, zipCode, listWithArticlesInvoice, priceOfItem, businessDiscountInvoice) values (?, ?, ?, ?, ?, ?, ?)";
-            String creat= "create table if not exists Invoices\n" +
+            String prep = "INSERT INTO invoices (accountName, clientDetailsInvoice, billingCity, zipCode, listWithArticlesInvoice, priceOfItem, businessDiscountInvoice,priceAfterDiscount," +
+                    "priceAfterVat,totalPrice ) values (?, ?, ?, ?, ?, ?, ?,?,?,?)";
+            String creat = "create table if not exists Invoices\n" +
                     "(\n" +
                     "\tinvoiceNumber INT unsigned not null auto_increment,\n" +
                     "\taccountName varchar(50) not null default '',\n" +
@@ -342,22 +485,28 @@ public class Invoice extends Orders {
                     "\tpriceOfItem varchar(50)  not null default '',\n" +
                     "\tbusinessDiscountInvoice int unsigned not null default 0,\n" +
                     "\tdateOfAuthorization datetime not null default (now() + interval 1 day),\n" +
+                    "\ttotalPrice int not null default 0,\n" +
+                    "\tpriceAfterDiscount int not null default 0,\n" +
+                    "\tpriceAfterVat int not null default 0,\n" +
                     "\tprimary key (invoiceNumber)\n" +
                     ");";
-            Statement createDB=con.createStatement();
+            Statement createDB = con.createStatement();
             createDB.execute(creat);
             PreparedStatement one = con.prepareStatement(prep);
             one.setString(1, accountName);
             one.setString(2, clientDetailsInvoice);
             one.setString(3, billingCity);
-            one.setInt(4,zipCode);
+            one.setInt(4, zipCode);
             one.setString(5, Arrays.toString(getItems()));
-            one.setString(6,Arrays.toString(getOrderPrice()));
+            one.setString(6, Arrays.toString(getInvoicePrice()));
             one.setInt(7, (int) getBusinessDiscountInvoice());//change to decimal
+            one.setInt(8, (int) amountAfterDiscount);
+            one.setInt(9, (int) amountAfterVat);
+            one.setInt(10, (int) totalAmount);
             one.execute();
             con.close();
             System.out.println("database");
-        } catch (SQLException  e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }

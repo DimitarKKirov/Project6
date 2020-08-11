@@ -7,12 +7,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.HashMap;
 
 public class Main implements Serializable {
 
 
-    public static void main(String[] args) throws IOException, UnCheckedException {
+    public static void main(String[] args) throws IOException, UnCheckedException, SQLException {
 
 //        try (FileInputStream file = new FileInputStream("C:\\Users\\lycifer\\IdeaProjects\\Training\\priceList2.txt")) {
 //            int a;
@@ -128,7 +129,11 @@ public class Main implements Serializable {
 //        Orders.printAllOrders();
 //        Invoice.printAllInvoices();
 //        theMoon.printOrder();
-    Invoice.invoiceList();
+//    Invoice.invoiceList();
+    Invoice one=new Invoice();
+    one.invoiceDbToList();
+    one.readDB();
+
 
     }
 }
