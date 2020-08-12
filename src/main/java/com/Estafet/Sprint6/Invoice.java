@@ -2,7 +2,6 @@ package com.Estafet.Sprint6;
 
 import com.Estafet.CustomExceptions.UnCheckedException;
 import com.Estafet.Interfaces.InvoiceCalculations;
-import com.mysql.cj.protocol.Resultset;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -16,6 +15,7 @@ public class Invoice extends Random implements InvoiceCalculations, Serializable
     private String articles;
     private String price;
     private Connection con;
+    Statement nStat;
     private static final String invoiceName = "*Shop Invoice*";// the variable is not inherited in extended classes and cannot be changed it can be only read
     private String clientDetailsInvoice;
     private String[] listWithArticlesInvoice = {"Laptop", "TV", "PC", "Monitor", "Security Cameras", "Toy Laptop", "Wall painting", "Desk", "Gaming chair", "Headset"};
@@ -31,7 +31,7 @@ public class Invoice extends Random implements InvoiceCalculations, Serializable
     private long amountAfterVat;
     private long totalAmountInvoice;
     private int vaTInvoice;
-    private static List<Invoice> listWhitInvoices;
+    private static List<Invoice> listWhitInvoices= new ArrayList<>();
     private int zipCode;
     private String accountName;
     private String dateOfAuthorization;
@@ -64,6 +64,15 @@ public class Invoice extends Random implements InvoiceCalculations, Serializable
         this.dateOfReleaseInvoice = dateOfReleaseInvoice;
         this.businessDiscountInvoice = businessDiscountInvoice;
         this.vaTInvoice = vaTInvoice;
+    }
+    public Invoice (String clientDetailsInvoice, int zipCode,String accountName,String billingCity,long businessDiscountInvoice){
+
+        this.clientDetailsInvoice = clientDetailsInvoice;
+        this.zipCode = zipCode;
+        this.accountName = accountName;
+        this.billingCity = billingCity;
+        this.businessDiscountInvoice = businessDiscountInvoice;
+
     }
 
 
@@ -189,7 +198,7 @@ public class Invoice extends Random implements InvoiceCalculations, Serializable
                 "\n Invoice Number: " + invoiceNumber + "\n Client details: " + clientDetailsInvoice + "\n City to deliver: " + billingCity +
                 "\n City Zip Code: " + zipCode +
                 "\n List With Articles: " + articles + "\n Date of Release: " + dateOfReleaseInvoice +
-                "\n Discount:" + businessDiscountInvoice + "%" + "\n Total amount: " + totalAmount + "\n VAT responsibility: " + invoiceVatCalculatedBy +
+                "\n Discount:" + businessDiscountInvoice + "%" + "\n Total amount: " + totalAmount +
                 "\n Amount after Discount and VAT: " + amountAfterVat);
         return a.toString();
     }
@@ -234,6 +243,7 @@ public class Invoice extends Random implements InvoiceCalculations, Serializable
     }
 
     public static void addInvoiceToList(Invoice a) throws SQLException {
+        //adding Invoice object to the list and database in the same time
         listWhitInvoices.add(a);
         String prep = "INSERT INTO invoices (accountName, clientDetailsInvoice, billingCity, zipCode, listWithArticlesInvoice, priceOfItem, businessDiscountInvoice,priceAfterDiscount," +
                 "priceAfterVat,totalPrice ) values (?, ?, ?, ?, ?, ?, ?,?,?,?)";
@@ -245,7 +255,7 @@ public class Invoice extends Random implements InvoiceCalculations, Serializable
         state.setInt(4, a.zipCode);
         state.setString(5, Arrays.toString(a.getItems()));
         state.setString(6, Arrays.toString(a.getInvoicePrice()));
-        state.setInt(7, (int) a.getBusinessDiscountInvoice());//change to decimal
+        state.setInt(7, (int) a.getBusinessDiscountInvoice());
         state.setInt(8, (int) a.amountAfterDiscount);
         state.setInt(9, (int) a.amountAfterVat);
         state.setInt(10, (int) a.totalAmount);
@@ -253,55 +263,64 @@ public class Invoice extends Random implements InvoiceCalculations, Serializable
         con.close();
     }
 
-    public void readDB() {
+    public void readDBList() {
+        //Printing the list and list size that is created from database rows
         System.out.println(listWhitInvoices.toString());
+        System.out.println("\n Invoice list size: "+listWhitInvoices.size());
+
     }
 
     public void invoiceDbToList() throws SQLException {
-        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/project6?serverTimezone=Europe/Sofia", "root", "root");
-        //SELECT * FROM Table ORDER BY ID DESC LIMIT 1
-        String q = "select invoiceNumber ,accountName, clientDetailsInvoice, billingCity," +
-                "zipCode, listWithArticlesInvoice, priceOfItem, businessDiscountInvoice," +
-                "dateOfAuthorization, totalPrice, priceAfterDiscount," +
-                "priceAfterVat from invoices";
-        Statement nStat = con.createStatement();
-        ResultSet list = nStat.executeQuery(q);
-        while (list.next()) {
-            int number = list.getInt("invoiceNumber");
-            String accName = list.getString("accountName");
-            String accDetails = list.getString("clientDetailsInvoice");
-            String city = list.getString("billingCity");
-            int zip = list.getInt("zipCode");
-            String articles = list.getString("listWithArticlesInvoice");
-            String price = list.getString("priceOfItem");///Exception in thread "main" java.sql.SQLFeatureNotSupportedException
-            int discount = list.getInt("businessDiscountInvoice");
-            Date dateAuthorization = list.getDate("dateOfAuthorization");
-            String time = dateAuthorization.toString();
-            int totalPrice = list.getInt("totalPrice");
-            int priceWithDiscount = list.getInt("priceAfterDiscount");
-            int vatPrice = list.getInt("priceAfterVat");
-            listWhitInvoices = new ArrayList<>(1000);
-            for (int i = 0; i < namesUsers.length; i++) {
-                Invoice invoice = new Invoice();
-                invoice.invoiceNumber = number;
-                invoice.clientDetailsInvoice = accDetails;
-                invoice.zipCode = zip;
-                invoice.accountName = accName;
-                invoice.dateOfReleaseInvoice = time;
-                invoice.dateOfAuthorization = time;
-                invoice.billingCity = city;
-                invoice.articles = articles;
-                invoice.price = price;
-                invoice.businessDiscountInvoice = discount;
-                invoice.totalAmount = totalPrice;
-                invoice.amountAfterDiscount = priceWithDiscount;
-                invoice.amountAfterVat = vatPrice;
-                listWhitInvoices.add(invoice);
+        //converting database rows to Invoice objects and adding them to a list
+        try {
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/project6?serverTimezone=Europe/Sofia", "root", "root");
 
+            String finalTime = " ";
+            String q = "select * from invoices ";
+            nStat = con.createStatement();
+            ResultSet list = nStat.executeQuery(q);
+            while (list.next()) {
+                invoiceNumber = list.getInt("invoiceNumber");
+                accountName = list.getString("accountName");
+                clientDetailsInvoice = list.getString("clientDetailsInvoice");
+                billingCity = list.getString("billingCity");
+                zipCode = list.getInt("zipCode");
+                articles = list.getString("listWithArticlesInvoice");
+                price = list.getString("priceOfItem");///Exception in thread "main" java.sql.SQLFeatureNotSupportedException
+                businessDiscountInvoice = list.getInt("businessDiscountInvoice");
+                totalAmount = list.getInt("totalPrice");
+                amountAfterDiscount = list.getInt("priceAfterDiscount");
+                amountAfterVat = list.getInt("priceAfterVat");
+                Date dateAuthorization = list.getDate("dateOfAuthorization");
+                Time timeAuthorization = list.getTime("dateOfAuthorization");
+                String time2 = timeAuthorization.toString();
+                String time = dateAuthorization.toString();
+                finalTime = time.concat(time2);
+
+                for (int i = 0; i < 1; i++) {
+                    Invoice invoice = new Invoice();
+                    invoice.invoiceNumber = invoiceNumber;
+                    invoice.clientDetailsInvoice = clientDetailsInvoice;
+                    invoice.zipCode = zipCode;
+                    invoice.accountName = accountName;
+                    invoice.dateOfReleaseInvoice = finalTime;
+                    invoice.dateOfAuthorization = finalTime;
+                    invoice.billingCity = billingCity;
+                    invoice.articles = articles;
+                    invoice.price = price;
+                    invoice.businessDiscountInvoice = businessDiscountInvoice;
+                    invoice.totalAmount = totalAmount;
+                    invoice.amountAfterDiscount = amountAfterDiscount;
+                    invoice.amountAfterVat = amountAfterVat;
+                    listWhitInvoices.add(invoice);
+                }
             }
-
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            nStat.close();
+            con.close();
         }
-        con.close();
 
     }
 
