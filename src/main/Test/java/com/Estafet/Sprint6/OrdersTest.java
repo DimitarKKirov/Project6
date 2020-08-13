@@ -6,6 +6,7 @@ import org.junit.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 
 import static org.junit.Assert.*;
 
@@ -97,7 +98,7 @@ public class OrdersTest {
     }
 
     @Test
-    public void addOrderToList() {
+    public void addOrderToList() throws SQLException {
         Orders.addOrderToList(theMoon);
         for (int i = 0; i < Orders.getListWithOrders().size(); i++) {
             assertTrue(Orders.getListWithOrders().contains(theMoon));
@@ -143,7 +144,7 @@ public class OrdersTest {
     }
 
     @Test
-    public void listChecker() {
+    public void listChecker() throws SQLException {
         Orders.addOrderToList(theMoon);
 
     }

@@ -207,43 +207,46 @@ public class Invoice extends Random implements InvoiceCalculations, Serializable
                 "\n Amount after Discount and VAT: " + amountAfterVat);
         return a.toString();
     }
-public static void invoiceDBAndListQuantity() throws SQLException {
-    System.out.println("ArrayList contains "+listWhitInvoices.size()+" invoices");
-    try {
-        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/project6?serverTimezone=Europe/Sofia", "root", "root");
-        String q = "select count(*) from invoices";
-        nStat = con.createStatement();
-        ResultSet list = nStat.executeQuery(q);
-        while(list.next()) {
-            System.out.println("Table invoices contains " + list.getInt(1) + " invoices");
+
+    public static void invoiceDBAndListQuantity() throws SQLException {
+        System.out.println("ArrayList contains " + listWhitInvoices.size() + " invoices");
+        try {
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/project6?serverTimezone=Europe/Sofia", "root", "root");
+            String q = "select count(*) from invoices";
+            nStat = con.createStatement();
+            ResultSet list = nStat.executeQuery(q);
+            while (list.next()) {
+                System.out.println("Table invoices contains " + list.getInt(1) + " invoices");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            nStat.close();
+            con.close();
         }
 
-    } catch (SQLException e) {
-        e.printStackTrace();
-    } finally {
-        nStat.close();
-        con.close();
+
     }
 
+    public static void searchUserInvoicesQuantity(String userName) throws SQLException {
+        try {
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/project6?serverTimezone=Europe/Sofia", "root", "root");
+            String q = "select count(*) from invoices where clientDetailsInvoice= " + "'" + userName + "'";
+            nStat = con.createStatement();
+            ResultSet list = nStat.executeQuery(q);
+            while (list.next()) {
+                System.out.println(userName + " have " + list.getInt(1) + " invoices");
+            }
 
-}
-public static void searchUserInvoicesQuantity(String userName) throws SQLException {
-    try {
-        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/project6?serverTimezone=Europe/Sofia", "root", "root");
-        String q = "select count(*) from invoices where clientDetailsInvoice= "+"'"+userName+"'";
-        nStat = con.createStatement();
-        ResultSet list = nStat.executeQuery(q);
-        while(list.next()) {
-            System.out.println(userName+" have " + list.getInt(1) + " invoices");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            nStat.close();
+            con.close();
         }
+    }
 
-    } catch (SQLException e) {
-        e.printStackTrace();
-    } finally {
-        nStat.close();
-        con.close();
-    }
-    }
     public String printInvoice() {
         String a = String.format("\n%s", invoiceName);
         String b = String.format("\n Order Number: %d", invoiceNumber);
@@ -524,7 +527,7 @@ public static void searchUserInvoicesQuantity(String userName) throws SQLExcepti
             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/project6?serverTimezone=Europe/Sofia", "root", "root");
             searchByID = new ArrayList<>();
             String finalTime;
-            String q = "select * from invoices where clientDetailsInvoice=" +"'"+ name +"'";
+            String q = "select * from invoices where clientDetailsInvoice=" + "'" + name + "'";
             nStat = con.createStatement();
             ResultSet list = nStat.executeQuery(q);
             while (list.next()) {
@@ -604,12 +607,13 @@ public static void searchUserInvoicesQuantity(String userName) throws SQLExcepti
         System.out.println(searchByID.toString());
         searchByID.clear();
     }
-    public static void searchInvoicesTableByTimeRange(String a,String b) throws SQLException {
+
+    public static void searchInvoicesTableByTimeRange(String a, String b) throws SQLException {
         try {
             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/project6?serverTimezone=Europe/Sofia", "root", "root");
             searchByID = new ArrayList<>();
             String finalTime;
-            String q = "select * from invoices where dateOfAuthorization between "+"'"+  a +"'"+ " and " +"'"+ b+"'";
+            String q = "select * from invoices where dateOfAuthorization between " + "'" + a + "'" + " and " + "'" + b + "'";
             nStat = con.createStatement();
             ResultSet list = nStat.executeQuery(q);
             while (list.next()) {
@@ -647,15 +651,16 @@ public static void searchUserInvoicesQuantity(String userName) throws SQLExcepti
         searchByID.clear();
 
     }
-    public static void updateAccountName(String current,String update) throws SQLException {
+
+    public static void updateAccountName(String current, String update) throws SQLException {
         try {
             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/project6?serverTimezone=Europe/Sofia", "root", "root");
-            for (Invoice i:listWhitInvoices  ) {
-                if (i.accountName.equals(current)){
+            for (Invoice i : listWhitInvoices) {
+                if (i.accountName.equals(current)) {
                     i.setAccountName(update);
                 }
             }
-            String q = "update invoices set accountName= "+"'"+update+"'"+" where accountName= "+"'"+current+"'";
+            String q = "update invoices set accountName= " + "'" + update + "'" + " where accountName= " + "'" + current + "'";
             nStat = con.createStatement();
             nStat.execute(q);
 
@@ -766,7 +771,7 @@ public static void searchUserInvoicesQuantity(String userName) throws SQLExcepti
             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/project6?serverTimezone=Europe/Sofia", "root", "root");
             nStat = con.createStatement();
             nStat.execute(del);
-            System.out.println(" *Database Invoice number "+a+"is deleted*");
+            System.out.println(" *Table Invoice number " + a + "is deleted*");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -792,9 +797,11 @@ public static void searchUserInvoicesQuantity(String userName) throws SQLExcepti
             con.close();
         }
     }
-    public static void deleteList(){
-        listWhitInvoices=null;
+
+    public static void deleteList() {
+        listWhitInvoices = null;
     }
+
     public static void deleteTableInvoices() throws SQLException {
         try {
             String del = "drop table invoices ";

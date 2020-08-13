@@ -11,7 +11,7 @@ public class Main implements Serializable {
 
     public static void main(String[] args) throws IOException, SQLException, UnCheckedException {
 
-        Invoice.invoiceList();
+//        Invoice.invoiceList();
 
         Invoice.invoiceDbToList();
         Invoice.readDBList();
@@ -35,9 +35,51 @@ public class Main implements Serializable {
             Invoice.updateAccountName("Account Number 007","Dimitar K");
         Invoice.invoiceDBAndListQuantity();
         Invoice.searchUserInvoicesQuantity("DKKK");
-        Invoice.clearDatabaseTableInvoices();
-        Invoice.deleteList();
-        Invoice.deleteTableInvoices();
+//        Invoice.clearDatabaseTableInvoices();
+//        Invoice.deleteList();
+//        Invoice.deleteTableInvoices();
+
+
+//      Orders.orderList();
+
+        Orders.orderDbToList();
+
+        Orders.printAllOrders();
+
+        Orders.orderDBAndListQuantity();
+
+        Orders test=new Orders("Dimitar Kirov Copy","Someone","The last City",340000,3);
+        test.articlesList();
+        test.priceList();
+        test.priceCalc();
+        test.discountCalc();
+
+        Orders.addOrderToList(test);
+
+        Orders.searchUserOrdersQuantity("DKK");
+
+        Orders.searchOrdersTableByID(9);
+
+        Orders.searchOrdersTableByName("DKK");
+
+        Orders.searchOrdersTableByIdRange(3,3);
+
+        Orders.searchOrdersTableByTimeRange("2020-08-14 17:28:29","2020-08-14 17:28:29");
+
+        Orders.updateAccountName("Account 94","Dimitar Kirov");
+        Orders.printAllOrders();
+
+//        Orders.deleteOrdersByNumber(3);
+//        Orders.orderDbToList();
+//        Orders.printAllOrders();
+//
+//        Orders.clearDatabaseTableOrders();
+//        Orders.orderDbToList();
+//        Orders.printAllOrders();
+//
+//        Orders.deleteTableOrders();
+
+
     }
 }
 
