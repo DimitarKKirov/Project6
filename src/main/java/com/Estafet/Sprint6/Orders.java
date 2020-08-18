@@ -377,7 +377,7 @@ public Orders(String accountName,String clientDetails,String billingCity,int zip
     public static void printAllOrders() throws UnCheckedException {
         //Printing the list and list size that is created from database rows
         System.out.println(listWithOrders.toString());
-        System.out.println("\n Invoice list size: " + listWithOrders.size());
+        System.out.println("\nOrders list size: " + listWithOrders.size());
 
     }
 
@@ -395,7 +395,7 @@ public Orders(String accountName,String clientDetails,String billingCity,int zip
                 Time timeAuthorization = list.getTime("dateOfAuthorization");
                 String time2 = timeAuthorization.toString();
                 String time = dateAuthorization.toString();
-                finalTime = time.concat(time2);
+                finalTime = time+" "+time2;
 
                 for (int i = 0; i < 1; i++) {
                     Orders orders = new Orders();
@@ -423,7 +423,7 @@ public Orders(String accountName,String clientDetails,String billingCity,int zip
     }
 
     public static void orderDBAndListQuantity() throws SQLException {
-        System.out.println("ArrayList contains " + listWithOrders.size() + " invoices");
+        System.out.println("ArrayList contains " + listWithOrders.size() + " orders");
         try {
             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/project6?serverTimezone=Europe/Sofia", "root", "root");
             String q = "select count(*) from orders";
@@ -471,7 +471,7 @@ public Orders(String accountName,String clientDetails,String billingCity,int zip
                 Time timeAuthorization = list.getTime("dateOfAuthorization");
                 String time2 = timeAuthorization.toString();
                 String time = dateAuthorization.toString();
-                finalTime = time.concat(time2);
+                finalTime = time+" "+time2;
 
                 for (int i = 0; i < 1; i++) {
                     Orders orders = new Orders();
@@ -510,7 +510,7 @@ public Orders(String accountName,String clientDetails,String billingCity,int zip
                 Time timeAuthorization = list.getTime("dateOfAuthorization");
                 String time2 = timeAuthorization.toString();
                 String time = dateAuthorization.toString();
-                finalTime = time.concat(time2);
+                finalTime = time+" "+time2;
 
                 for (int i = 0; i < 1; i++) {
                     Orders orders = new Orders();
@@ -551,7 +551,7 @@ public Orders(String accountName,String clientDetails,String billingCity,int zip
                 Time timeAuthorization = list.getTime("dateOfAuthorization");
                 String time2 = timeAuthorization.toString();
                 String time = dateAuthorization.toString();
-                finalTime = time.concat(time2);
+                finalTime = time+" "+time2;
 
                 for (int i = 0; i < 1; i++) {
                     Orders orders = new Orders();
@@ -592,7 +592,7 @@ public Orders(String accountName,String clientDetails,String billingCity,int zip
                 Time timeAuthorization = list.getTime("dateOfAuthorization");
                 String time2 = timeAuthorization.toString();
                 String time = dateAuthorization.toString();
-                finalTime = time.concat(time2);
+                finalTime = time+" "+time2;
 
                 for (int i = 0; i < 1; i++) {
                     Orders orders = new Orders();

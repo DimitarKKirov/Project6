@@ -288,7 +288,7 @@ public class Invoice extends Random implements InvoiceCalculations, Serializable
 
     public static void addInvoiceToList(Invoice a) throws SQLException {
         //adding Invoice object to the list and database in the same time
-        listWhitInvoices.add(a);
+
         String prep = "INSERT INTO invoices (accountName, clientDetailsInvoice, billingCity, zipCode, listWithArticlesInvoice, priceOfItem, businessDiscountInvoice,priceAfterDiscount," +
                 "priceAfterVat,totalPrice ) values (?, ?, ?, ?, ?, ?, ?,?,?,?)";
         con = DriverManager.getConnection("jdbc:mysql://localhost:3306/project6?serverTimezone=Europe/Sofia", "root", "root");
@@ -305,6 +305,7 @@ public class Invoice extends Random implements InvoiceCalculations, Serializable
         state.setInt(10, (int) a.totalAmount);
         state.execute();
         con.close();
+        listWhitInvoices.add(a);
     }
 
     public static void readDBList() {
@@ -328,7 +329,7 @@ public class Invoice extends Random implements InvoiceCalculations, Serializable
                 Time timeAuthorization = list.getTime("dateOfAuthorization");
                 String time2 = timeAuthorization.toString();
                 String time = dateAuthorization.toString();
-                finalTime = time.concat(time2);
+                finalTime = time+" "+time2;
 
                 for (int i = 0; i < 1; i++) {
                     Invoice invoice = new Invoice();
@@ -492,7 +493,7 @@ public class Invoice extends Random implements InvoiceCalculations, Serializable
                 Time timeAuthorization = list.getTime("dateOfAuthorization");
                 String time2 = timeAuthorization.toString();
                 String time = dateAuthorization.toString();
-                finalTime = time.concat(time2);
+                finalTime = time+" "+time2;
 
                 for (int i = 0; i < 1; i++) {
                     Invoice invoice = new Invoice();
@@ -501,7 +502,6 @@ public class Invoice extends Random implements InvoiceCalculations, Serializable
                     invoice.zipCode = list.getInt("zipCode");
                     invoice.accountName = list.getString("accountName");
                     invoice.dateOfReleaseInvoice = finalTime;
-                    invoice.dateOfAuthorization = finalTime;
                     invoice.billingCity = list.getString("billingCity");
                     invoice.articles = list.getString("listWithArticlesInvoice");
                     invoice.price = list.getString("priceOfItem");///Exception in thread "main" java.sql.SQLFeatureNotSupportedException
@@ -535,7 +535,7 @@ public class Invoice extends Random implements InvoiceCalculations, Serializable
                 Time timeAuthorization = list.getTime("dateOfAuthorization");
                 String time2 = timeAuthorization.toString();
                 String time = dateAuthorization.toString();
-                finalTime = time.concat(time2);
+                finalTime = time+" "+time2;
 
                 for (int i = 0; i < 1; i++) {
                     Invoice invoice = new Invoice();
@@ -544,7 +544,6 @@ public class Invoice extends Random implements InvoiceCalculations, Serializable
                     invoice.zipCode = list.getInt("zipCode");
                     invoice.accountName = list.getString("accountName");
                     invoice.dateOfReleaseInvoice = finalTime;
-                    invoice.dateOfAuthorization = finalTime;
                     invoice.billingCity = list.getString("billingCity");
                     invoice.articles = list.getString("listWithArticlesInvoice");
                     invoice.price = list.getString("priceOfItem");///Exception in thread "main" java.sql.SQLFeatureNotSupportedException
@@ -578,7 +577,7 @@ public class Invoice extends Random implements InvoiceCalculations, Serializable
                 Time timeAuthorization = list.getTime("dateOfAuthorization");
                 String time2 = timeAuthorization.toString();
                 String time = dateAuthorization.toString();
-                finalTime = time.concat(time2);
+                finalTime = time+" "+time2;
 
                 for (int i = 0; i < 1; i++) {
                     Invoice invoice = new Invoice();
@@ -587,7 +586,6 @@ public class Invoice extends Random implements InvoiceCalculations, Serializable
                     invoice.zipCode = list.getInt("zipCode");
                     invoice.accountName = list.getString("accountName");
                     invoice.dateOfReleaseInvoice = finalTime;
-                    invoice.dateOfAuthorization = finalTime;
                     invoice.billingCity = list.getString("billingCity");
                     invoice.articles = list.getString("listWithArticlesInvoice");
                     invoice.price = list.getString("priceOfItem");///Exception in thread "main" java.sql.SQLFeatureNotSupportedException
@@ -621,7 +619,7 @@ public class Invoice extends Random implements InvoiceCalculations, Serializable
                 Time timeAuthorization = list.getTime("dateOfAuthorization");
                 String time2 = timeAuthorization.toString();
                 String time = dateAuthorization.toString();
-                finalTime = time.concat(time2);
+                finalTime = time+" "+time2;
 
                 for (int i = 0; i < 1; i++) {
                     Invoice invoice = new Invoice();
@@ -630,7 +628,6 @@ public class Invoice extends Random implements InvoiceCalculations, Serializable
                     invoice.zipCode = list.getInt("zipCode");
                     invoice.accountName = list.getString("accountName");
                     invoice.dateOfReleaseInvoice = finalTime;
-                    invoice.dateOfAuthorization = finalTime;
                     invoice.billingCity = list.getString("billingCity");
                     invoice.articles = list.getString("listWithArticlesInvoice");
                     invoice.price = list.getString("priceOfItem");///Exception in thread "main" java.sql.SQLFeatureNotSupportedException
@@ -766,6 +763,7 @@ public class Invoice extends Random implements InvoiceCalculations, Serializable
         }
         listWhitInvoices.remove(b);
         System.out.println(" *Invoice number " + a + " is deleted*");
+
         try {
             String del = "delete from invoices where invoiceNumber =" + a;
             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/project6?serverTimezone=Europe/Sofia", "root", "root");
